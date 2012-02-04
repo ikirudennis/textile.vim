@@ -31,13 +31,16 @@ endfunction
 function! TextileRenderBufferToPreview()
   let filename = "/tmp/textile-preview.html"
   call TextileRenderFile(getbufline(bufname("%"), 1, '$'), filename)
-  " Verify if browser was set
-  if !exists("g:TextileBrowser")
-    let g:TextileBrowser='Safari'
-  endif
+  "
   " call configured browser according OS
   if !exists("g:TextileOS") || g:TextileOS == 'mac'
-    call system("open -a \"".g:TextileBrowser."\" ".filename)
+    if exists("g:TextileBrowser")
+    " if browser was set, use it
+      call system("open -a \"".g:TextileBrowser."\" ".filename)
+    else
+    " use default application to open file
+      call system("open ".filename)
+    endif
   else
     echo g:TextileBrowser." ".filename
     call system(g:TextileBrowser." ".filename)
